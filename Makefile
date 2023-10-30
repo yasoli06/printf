@@ -1,6 +1,6 @@
 NAME = libftprintf.a
 
-SRC = 
+SRC = ft_printf.c ft_test.c
 
 OBJECTS = $(SRC:%.c=%.o)
 
