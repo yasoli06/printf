@@ -6,35 +6,33 @@
 /*   By: yaolivei <yaolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 15:23:34 by yaolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 15:42:46 by yaolivei         ###   ########.fr       */
+/*   Updated: 2023/11/02 20:39:21 by yaolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_putchar(char format)
+int	ft_putchar(int format)
 {
 	if (write(1, &format, 1) == -1)
 		return (-1);
-	return (0);
+	return (1);
 }
 
 int	ft_putstr(char *str)
 {
 	int	i;
-	int	cont;
 
 	i = 0;
-	cont = 0;
 	if (!str)
 		str = "(null)";
-	while (str[i] != '\0')
+	while (str[i])
 	{
-		if (write(1, &str[i], 1) < 0)
-			i++;
-		cont++;
+		if (write(1, &str[i], 1) == -1)
+			return (-1);
+		i++;
 	}
-	return (cont);
+	return (i);
 }
 
 int	ft_process(char type, va_list ptr)
@@ -46,16 +44,16 @@ int	ft_process(char type, va_list ptr)
 		cont += ft_putchar(va_arg(ptr, int));
 	else if (type == 's')
 		cont += ft_putstr(va_arg (ptr, char *));
-	else if (type == 'p')
-		cont += ft_putptr(va_arg(ptr, unsigned long), "0123456789abcdef");
+	// else if (type == 'p')
+	// 	cont += ft_putptr(va_arg(ptr, unsigned long), "0123456789abcdef");
 	else if (type == 'd' || type == 'i')
 		cont += ft_putnbr(va_arg(ptr, int));
 	else if (type == 'u')
-		cont += ft_putnbr_uns(va_arg(ptr, unsigned int));
-	else if (type == 'x')
-		cont += ft_putnbr_hx(va_arg(ptr, int), "0123456789abcdef");
-	else if (type == 'X')
-		cont += ft_putnbr_hx(va_arg(ptr, int), "0123456789ABCDEF");
+	cont += ft_putnbr_uns(va_arg(ptr, unsigned int));
+	// else if (type == 'x')
+	// 	cont += ft_putnbr(va_arg(ptr, int), "0123456789abcdef");
+	// else if (type == 'X')
+	// 	cont += ft_putnbr(va_arg(ptr, int), "0123456789ABCDEF");
 	else if (type == '%')
 	{
 		write (1, "%", 1);
@@ -76,7 +74,10 @@ int	ft_printf(char const *format, ...)
 	while (format[i])
 	{
 		if (format[i] == '%')
+		{
 			cont += ft_process(format[i + 1], ptr);
+			i++;
+		}
 		else
 		{
 			write (1, &format[i], 1);
@@ -87,11 +88,16 @@ int	ft_printf(char const *format, ...)
 	va_end(ptr);
 	return (cont);
 }
-/*int main(void)
-{
-	char	*s = "dos";
 
-	//ft_printf("MI func: %p\n", s);
-	printf("SU func: %p\n", s);
-	return (0);
-}*/
+// int	main(void)
+// {
+// 	char	c;
+// 	int		retorno;
+// 	int		retorno2;
+
+// 	c = -42;
+// 	retorno = ft_printf("MI: %u\n", c);
+// 	retorno2 = printf("SU: %u\n", c);
+// 	printf("%i\n%i\n", retorno, retorno2);
+// 	return (0);
+
