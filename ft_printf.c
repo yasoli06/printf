@@ -6,7 +6,7 @@
 /*   By: yaolivei <yaolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 15:23:34 by yaolivei          #+#    #+#             */
-/*   Updated: 2023/11/06 14:08:43 by yaolivei         ###   ########.fr       */
+/*   Updated: 2023/11/06 17:23:50 by yaolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@ int	ft_putchar(int format)
 int	ft_putstr(char *str)
 {
 	int	i;
+	int	cont;
 
 	i = 0;
+	cont = 0;
 	if (!str)
 		str = "(null)";
 	while (str[i])
@@ -31,6 +33,7 @@ int	ft_putstr(char *str)
 		if (write(1, &str[i], 1) == -1)
 			return (-1);
 		i++;
+		cont++;
 	}
 	return (i);
 }
@@ -43,20 +46,21 @@ int	ft_process(char type, va_list ptr)
 	if (type == 'c')
 		cont += ft_putchar(va_arg(ptr, int));
 	else if (type == 's')
-		cont += ft_putstr(va_arg (ptr, char *));
-	//else if (type == 'p')
-	//	cont += ft_putptr_hx(va_arg(ptr, unsigned long), "0123456789abcdef");
+		cont = ft_putstr(va_arg (ptr, char *));
+	else if (type == 'p')
+		cont = ft_putptr(va_arg(ptr, unsigned long), "0x0123456789abcdef") + 2;
 	else if (type == 'd' || type == 'i')
-		cont += ft_putnbr(va_arg(ptr, int));
+		cont = ft_putnbr(va_arg(ptr, int));
 	else if (type == 'u')
-		cont += ft_putnbr_uns(va_arg(ptr, unsigned int));
+		cont = ft_putnbr_uns(va_arg(ptr, unsigned int));
 	else if (type == 'x')
-		cont += ft_putnbr_hx(va_arg(ptr, int), "0123456789abcdef");
+		cont = ft_putnbr_hx(va_arg(ptr, int), "0123456789abcdef");
 	else if (type == 'X')
-		cont += ft_putnbr_hx(va_arg(ptr, int), "0123456789ABCDEF");
+		cont = ft_putnbr_hx(va_arg(ptr, int), "0123456789ABCDEF");
 	else if (type == '%')
 	{
-		write (1, "%", 1);
+		if (write (1, "%", 1) == -1)
+			return (-1);
 		cont++;
 	}
 	return (cont);
@@ -80,7 +84,8 @@ int	ft_printf(char const *format, ...)
 		}
 		else
 		{
-			write (1, &format[i], 1);
+			if (write (1, &format[i], 1) == -1)
+				return (-1);
 			cont++;
 		}
 		i++;
@@ -89,15 +94,16 @@ int	ft_printf(char const *format, ...)
 	return (cont);
 }
 
-int	main(void)
+/*int	main(void)
 {
-	char	c;
-	int		retorno;
-	int		retorno2;
-
-	c = 0;
-	retorno = ft_printf("MI: %x\n", c);
-	retorno2 = printf("SU: %x\n", c);
-	printf("%x\n%x\n", retorno, retorno2);
+	char	*c;
+	// int		retorno;
+	// int		retorno2;
+	c = "hola";
+	// retorno = ft_printf("MI: %p\n", &c);
+	// retorno2 = printf("SU: %p\n", &c);
+	//printf("%p\n%p\n", retorno, retorno2);
+	ft_printf("MI: %p\n", &c);
+	printf("SU: %p\n", &c);
 	return (0);
-}
+}*/
