@@ -6,7 +6,7 @@
 /*   By: yaolivei <yaolivei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 20:14:13 by yaolivei          #+#    #+#             */
-/*   Updated: 2023/11/02 20:36:46 by yaolivei         ###   ########.fr       */
+/*   Updated: 2023/11/06 14:02:02 by yaolivei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,20 @@ int	ft_putnbr_uns(unsigned int nb)
 	return (count);
 }
 
-// //int	ft_putnbr_hx(unsigned int nb)
-// {
-// 	char	*base;
+int	ft_putnbr_hx(unsigned int hx, char *base)
+{
+	int			count;
 
-// 	base = "0123456789abcdef";
-// }
+	count = 0;
+	if (hx < 16)
+	{
+		ft_putchar(base[hx % 16]);
+		count++;
+	}
+	else
+	{
+		count += ft_putnbr_hx (hx / 16, base);
+		count += ft_putchar (base [hx % 16]);
+	}
+	return (count);
+}
